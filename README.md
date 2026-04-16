@@ -1,4 +1,4 @@
-# 🚀 AI Customer Risk Analyzer
+# 🚀 Churn Prediction
 
 An interactive **Machine Learning web app** that predicts whether a customer is likely to churn using an Artificial Neural Network (ANN).
 
@@ -47,8 +47,7 @@ The model is trained on customer data and uses:
 Clone the repository:
 
 ```
-git clone https://github.com/Abhi-Sh4rma/Abhi_Ann_Analyze.git
-cd Abhi_Ann_Analyze
+git clone https://github.com/ajaj123-debug/Churn_Prediction_Analysis.git
 ```
 
 Install dependencies:
@@ -81,7 +80,7 @@ streamlit run app.py
 
 This app is deployed using **Streamlit Community Cloud**
 
-👉 Live App: https://abhi-sh4rma-ann-analyze.streamlit.app/
+👉 Live App: https://customerchurnajaj.streamlit.app/
 
 ---
 
@@ -96,13 +95,6 @@ This app is deployed using **Streamlit Community Cloud**
 
 ---
 
-## 👨‍💻 Author
 
-**Abhishek Sharma**
-Aspiring Cybersecurity & AI Enthusiast 🔐🤖
 
 ---
-
-## ⭐ Support
-
-If you like this project, give it a ⭐ on GitHub!

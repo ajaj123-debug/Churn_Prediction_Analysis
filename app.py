@@ -17,54 +17,78 @@ FEATURE_COLUMNS_PATH = ARTIFACTS_DIR / "feature_columns.json"
 
 # Page config
 st.set_page_config(
-    page_title="AI Customer Risk Analyzer",
-    page_icon="🚀",
-    layout="wide"
+    page_title="Churn Predictor Pro",
+    page_icon="🔍",
+    layout="wide",
+    initial_sidebar_state="expanded"
 )
 
 
-# 🎨 Enhanced UI Styling
+# 🎨 New UI Styling - Modern Blue Theme
 st.markdown(
     """
     <style>
-    .block-container {
-        padding-top: 1.5rem;
-        padding-bottom: 2rem;
-        max-width: 1100px;
-    }
-    .hero {
-        background: linear-gradient(135deg, #020617 0%, #0f172a 40%, #1e293b 100%);
+    .main-header {
+        background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
         color: white;
-        padding: 2.5rem;
-        border-radius: 24px;
-        margin-bottom: 2rem;
+        padding: 2rem;
+        border-radius: 20px;
         text-align: center;
-        box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+        margin-bottom: 2rem;
+        box-shadow: 0 10px 30px rgba(30, 58, 138, 0.3);
     }
-    .hero h1 {
+    .main-header h1 {
         margin: 0;
-        font-size: 2.5rem;
-        letter-spacing: 1px;
+        font-size: 3rem;
+        font-weight: 700;
     }
-    .hero p {
-        margin-top: 0.7rem;
-        opacity: 0.85;
-        font-size: 1.1rem;
+    .main-header p {
+        margin-top: 0.5rem;
+        opacity: 0.9;
+        font-size: 1.2rem;
     }
-    .result-card {
-        background: #ffffff;
-        border-radius: 18px;
-        padding: 1.5rem;
-        margin-top: 1.5rem;
-        box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    .prediction-result {
+        background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+        border-radius: 15px;
+        padding: 2rem;
+        margin-top: 2rem;
+        border-left: 5px solid #3b82f6;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+    .risk-high {
+        color: #dc2626;
+        font-weight: bold;
+    }
+    .risk-low {
+        color: #16a34a;
+        font-weight: bold;
+    }
+    .sidebar-input {
+        background: #f1f5f9;
+        padding: 1rem;
+        border-radius: 10px;
+        margin-bottom: 1rem;
     }
     .stButton>button {
-        height: 3.2em;
-        border-radius: 12px;
-        font-size: 16px;
-        font-weight: 600;
-        background: linear-gradient(90deg, #22c55e, #16a34a);
+        background: linear-gradient(90deg, #3b82f6, #1d4ed8);
         color: white;
+        border: none;
+        border-radius: 25px;
+        padding: 0.75rem 2rem;
+        font-size: 1rem;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+    .stButton>button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(59, 130, 246, 0.4);
+    }
+    .metric-card {
+        background: white;
+        border-radius: 10px;
+        padding: 1rem;
+        text-align: center;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
     }
     </style>
     """,
@@ -72,12 +96,12 @@ st.markdown(
 )
 
 
-# 🎯 Hero Section
+# 🎯 Main Header
 st.markdown(
     """
-    <div class="hero">
-        <h1>🚀 AI Customer Risk Analyzer</h1>
-        <p>Smart prediction system to identify high-risk customers using Neural Networks</p>
+    <div class="main-header">
+        <h1>🔍 Churn Predictor Pro</h1>
+        <p>Advanced AI-powered customer retention analysis</p>
     </div>
     """,
     unsafe_allow_html=True,
@@ -118,31 +142,55 @@ except Exception as error:
     st.stop()
 
 
-# 📊 Input Section
-st.subheader("📥 Enter Customer Details")
+# 📊 Sidebar for Inputs
+st.sidebar.title("📝 Customer Profile")
 
-with st.form("churn_form"):
-    col1, col2 = st.columns(2)
+with st.sidebar:
+    st.markdown('<div class="sidebar-input">', unsafe_allow_html=True)
+    credit_score = st.slider("💳 Credit Score", 300, 850, 600, help="Customer's credit score")
+    st.markdown('</div>', unsafe_allow_html=True)
 
-    with col1:
-        credit_score = st.number_input("💳 Credit Score", 300, 850, 600)
-        gender = st.selectbox("👤 Gender", ["Female", "Male"])
-        age = st.number_input("🎂 Age", 18, 100, 40)
-        tenure = st.number_input("📅 Tenure", 0, 10, 3)
-        balance = st.number_input("💰 Balance", 0.0, 250000.0, 60000.0)
+    st.markdown('<div class="sidebar-input">', unsafe_allow_html=True)
+    gender = st.radio("👤 Gender", ["Female", "Male"], horizontal=True)
+    st.markdown('</div>', unsafe_allow_html=True)
 
-    with col2:
-        num_products = st.number_input("📦 Products", 1, 4, 2)
-        has_cr_card = st.selectbox("💳 Credit Card", ["Yes", "No"])
-        is_active_member = st.selectbox("⚡ Active Member", ["Yes", "No"])
-        estimated_salary = st.number_input("💵 Salary", 0.0, 500000.0, 80000.0)
-        geography = st.selectbox("🌍 Location", ["France", "Germany", "Spain"])
+    st.markdown('<div class="sidebar-input">', unsafe_allow_html=True)
+    age = st.slider("🎂 Age", 18, 100, 40, help="Customer's age in years")
+    st.markdown('</div>', unsafe_allow_html=True)
 
-    submitted = st.form_submit_button("🚀 Analyze Risk")
+    st.markdown('<div class="sidebar-input">', unsafe_allow_html=True)
+    tenure = st.slider("📅 Tenure", 0, 10, 3, help="Years with the bank")
+    st.markdown('</div>', unsafe_allow_html=True)
+
+    st.markdown('<div class="sidebar-input">', unsafe_allow_html=True)
+    balance = st.number_input("💰 Balance ($)", 0.0, 250000.0, 60000.0, step=1000.0)
+    st.markdown('</div>', unsafe_allow_html=True)
+
+    st.markdown('<div class="sidebar-input">', unsafe_allow_html=True)
+    num_products = st.selectbox("📦 Number of Products", [1, 2, 3, 4], help="Products held by customer")
+    st.markdown('</div>', unsafe_allow_html=True)
+
+    st.markdown('<div class="sidebar-input">', unsafe_allow_html=True)
+    has_cr_card = st.checkbox("💳 Has Credit Card", value=True)
+    st.markdown('</div>', unsafe_allow_html=True)
+
+    st.markdown('<div class="sidebar-input">', unsafe_allow_html=True)
+    is_active_member = st.checkbox("⚡ Active Member", value=True)
+    st.markdown('</div>', unsafe_allow_html=True)
+
+    st.markdown('<div class="sidebar-input">', unsafe_allow_html=True)
+    estimated_salary = st.number_input("💵 Estimated Salary ($)", 0.0, 500000.0, 80000.0, step=1000.0)
+    st.markdown('</div>', unsafe_allow_html=True)
+
+    st.markdown('<div class="sidebar-input">', unsafe_allow_html=True)
+    geography = st.selectbox("🌍 Geography", ["France", "Germany", "Spain"])
+    st.markdown('</div>', unsafe_allow_html=True)
+
+    analyze_button = st.button("🔍 Analyze Customer Risk", use_container_width=True)
 
 
 # 🔮 Prediction Section
-if submitted:
+if analyze_button:
     raw_row = pd.DataFrame(
         [
             {
@@ -153,8 +201,8 @@ if submitted:
                 "Tenure": tenure,
                 "Balance": balance,
                 "NumOfProducts": num_products,
-                "HasCrCard": 1 if has_cr_card == "Yes" else 0,
-                "IsActiveMember": 1 if is_active_member == "Yes" else 0,
+                "HasCrCard": 1 if has_cr_card else 0,
+                "IsActiveMember": 1 if is_active_member else 0,
                 "EstimatedSalary": estimated_salary,
             }
         ]
@@ -169,23 +217,40 @@ if submitted:
     churn_probability = float(model.predict(scaled_row, verbose=0)[0][0])
     stay_probability = 1.0 - churn_probability
     churn_label = "⚠️ HIGH RISK" if churn_probability >= 0.5 else "✅ LOW RISK"
+    risk_class = "risk-high" if churn_probability >= 0.5 else "risk-low"
 
-    st.markdown('<div class="result-card">', unsafe_allow_html=True)
+    st.markdown('<div class="prediction-result">', unsafe_allow_html=True)
 
-    st.subheader("📊 Risk Analysis Result")
+    st.subheader("📊 Prediction Results")
 
-    col1, col2 = st.columns(2)
+    col1, col2, col3 = st.columns(3)
 
     with col1:
-        st.metric("⚠️ Churn Risk", f"{churn_probability * 100:.2f}%")
+        st.markdown('<div class="metric-card">', unsafe_allow_html=True)
+        st.metric("⚠️ Churn Probability", f"{churn_probability * 100:.1f}%")
+        st.markdown('</div>', unsafe_allow_html=True)
 
     with col2:
-        st.metric("✅ Retention Chance", f"{stay_probability * 100:.2f}%")
+        st.markdown('<div class="metric-card">', unsafe_allow_html=True)
+        st.metric("✅ Retention Probability", f"{stay_probability * 100:.1f}%")
+        st.markdown('</div>', unsafe_allow_html=True)
 
-    st.write(f"### Final Decision: {churn_label}")
+    with col3:
+        st.markdown('<div class="metric-card">', unsafe_allow_html=True)
+        st.markdown(f"**Risk Level:** <span class='{risk_class}'>{churn_label}</span>", unsafe_allow_html=True)
+        st.markdown('</div>', unsafe_allow_html=True)
 
+    # Progress bar
     st.progress(churn_probability)
+    st.caption("Churn Risk Indicator")
+
+    # Additional insights
+    if churn_probability >= 0.5:
+        st.warning("🚨 This customer is at high risk of churning. Consider retention strategies!")
+    else:
+        st.success("🎉 This customer shows low churn risk. Great job maintaining customer satisfaction!")
 
     st.markdown("</div>", unsafe_allow_html=True)
 
-    st.caption("Model uses ANN with preprocessing: encoding + scaling")
+else:
+    st.info("👈 Enter customer details in the sidebar and click 'Analyze Customer Risk' to get predictions.")
