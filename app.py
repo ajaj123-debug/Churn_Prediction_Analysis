@@ -24,7 +24,6 @@ st.set_page_config(
 )
 
 
-# 🎨 New UI Styling - Modern Blue Theme
 st.markdown(
     """
     <style>

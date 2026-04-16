@@ -139,6 +139,3 @@ If you wish to retrain the model:
 4. Test thoroughly
 5. Submit a pull request
 
-## License
-
-This project is open-source. Please refer to the license file for terms of use.
